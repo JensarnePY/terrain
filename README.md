@@ -1,2 +1,5 @@
 # terrain
-adding chunk gen
+added chunk gen
+
+adding multithreding
+adding lod system
