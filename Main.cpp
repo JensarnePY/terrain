@@ -5,7 +5,7 @@
 
 class Terrain {
 public:
-	int chunksize = 32;
+	int chunksize = 128;
 	int renderDistent = 10;
 	std::vector<Chunk> chunks;
 
@@ -22,15 +22,15 @@ Terrain::Terrain(std::vector<Texture>& textures) {
 }
 
 
-bool chunkExists(const std::vector<Chunk>& chunks, const glm::vec3& pos)
+bool chunkExists(const std::vector<Chunk>& chunks, const glm::vec2& pos)
 {	
 	for (const auto& chunk : chunks) {
 		if (chunk.position == pos) {
-			std::cout << "1" << "\n";
+			//std::cout << "1" << "\n";
 			return 1;
 		}
 	}
-	std::cout << "0" << "\n";
+	//std::cout << "0" << "\n";
 	return 0;
 
 
@@ -43,38 +43,34 @@ bool chunkExists(const std::vector<Chunk>& chunks, const glm::vec3& pos)
 
 void Terrain::update(Camera& camera, std::vector<Texture>& textures) {
 
-	std::vector<glm::vec3>ChunkToLoad;
+	std::vector<glm::vec2>ChunkToLoad;
 	int current_chunkX = static_cast<int>(std::floor(camera.Position.x / chunksize));
-	int current_chunkY = static_cast<int>(std::floor(camera.Position.y / chunksize));
 	int current_chunkZ = static_cast<int>(std::floor(camera.Position.z / chunksize));
 	for (int x = -renderDistent; x <= renderDistent; x++) {
-		for (int y = -renderDistent / 2; y <= renderDistent / 2; y++) {
-			for (int z = -renderDistent; z <= renderDistent; z++) {
+		for (int z = -renderDistent; z <= renderDistent; z++) {
 
-				glm::vec3 newChunkPos(
-					(current_chunkX + x) * chunksize,
-					(current_chunkY + y) * chunksize,
-					(current_chunkZ + z) * chunksize);
+			glm::vec2 newChunkPos(
+				(current_chunkX + x) * chunksize,
+				(current_chunkZ + z) * chunksize);
 
-				if (!chunkExists(chunks, newChunkPos)) {
-					ChunkToLoad.push_back(glm::vec3(newChunkPos.x, newChunkPos.y, newChunkPos.z));
-					Chunk chunk2(ChunkToLoad[0].x, ChunkToLoad[0].z, chunksize);
-					chunk2.init(textures);
-					chunks.push_back(chunk2);
-					ChunkToLoad.clear();
-				}
+			if (!chunkExists(chunks, newChunkPos)) {
+				ChunkToLoad.push_back(glm::vec2(newChunkPos.x, newChunkPos.y/*z*/));
+				Chunk chunk2(ChunkToLoad[0].x, ChunkToLoad[0].y/*z*/, chunksize);
+				chunk2.init(textures);
+				chunks.push_back(chunk2);
+				ChunkToLoad.clear();
 			}
 		}
 	}
 
 
-	for (const auto& chunk : chunks) {
-		for (const auto& chunk2 : chunks) {
-			if (chunk.position == chunk2.position) {
-				std::cout << "dup\n";
-			}
-		}
-	}
+	//for (const auto& chunk : chunks) {
+	//	for (const auto& chunk2 : chunks) {
+	//		if (chunk.position == chunk2.position) {
+	//			std::cout << "dup\n";
+	//		}
+	//	}
+	//}
 
 
 	//for (auto load : ChunkToLoad) {

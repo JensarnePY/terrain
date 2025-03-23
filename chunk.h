@@ -6,10 +6,9 @@
 class Chunk {
 public:
 	int x = 0;
-	int y = 0;
 	int z = 0;
 	int size = 0;
-	glm::vec3 position;
+	glm::vec2 position;
 	Mesh mesh;
 
 	FastNoiseLite Noise;

@@ -3,9 +3,8 @@
 
 Chunk::Chunk(int x, int z, int size) {
 	Chunk::x = x;
-	Chunk::y = 0;
 	Chunk::z = z;
-	Chunk::position = glm::vec3(x, 0, z);
+	Chunk::position = glm::vec2(x, z);
 	Chunk::size = size;
 	Chunk::Noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 }
