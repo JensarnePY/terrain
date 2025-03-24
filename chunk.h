@@ -9,7 +9,10 @@ public:
 	int z = 0;
 	int size = 0;
 	glm::vec2 position;
+	glm::vec3 position_vec3;
+
 	Mesh mesh;
+	Mesh meshLod;
 
 	FastNoiseLite Noise;
 

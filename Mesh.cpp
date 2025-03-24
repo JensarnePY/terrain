@@ -37,28 +37,25 @@ void Mesh::nymesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices,
 }
 
 
-void Mesh::Draw(Shader& shader, Camera& camera)
+void Mesh::Draw(Shader& shader, Camera& camera, glm::vec3 pos)
 {
 	shader.Activate();
 	VAO.Bind();
 
-	//for (int i; i > textures.size(); i++) {
-	//	std::string num = std::to_string(i);
-	//	textures[i].texUnit(shader, (std::string("tex") + num), i);
-	//	textures[i].Bind();
-	//}
-
-	textures[0].texUnit(shader, "tex0", 0);
-	textures[0].Bind();
-	textures[1].texUnit(shader, "tex1", 1);
-	textures[1].Bind();
-	textures[2].texUnit(shader, "tex2", 2);
-	textures[2].Bind();
+	glm::vec3 objectPos = pos;
+	glm::mat4 objectModel = glm::mat4(1.0f);
+	objectModel = glm::translate(objectModel, objectPos);
+	//shaderProgram.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
+	
+	for (auto& tex : textures) {
+		tex.Bind();
+	}
 	
 	glUniform1f(glGetUniformLocation(shader.ID, "time"), glfwGetTime());
 	glUniform3f(glGetUniformLocation(shader.ID, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
 
-	camera.Matrix(shader, "camMatrix");
+	
 
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }

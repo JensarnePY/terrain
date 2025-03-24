@@ -23,6 +23,6 @@ public:
 	void nymesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector<Texture>& textures);
 
 	// Draws the mesh
-	void Draw(Shader& shader, Camera& camera);
+	void Draw(Shader& shader, Camera& camera, glm::vec3 pos);
 };
 #endif
