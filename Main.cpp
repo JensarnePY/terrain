@@ -7,12 +7,11 @@ class Terrain {
 public:
 	int chunksize = 128;
 	int renderDistent = 20;
-	int renderMAX = 30;
 	std::vector<Chunk> chunks;
 
 	Terrain();
 	void update(Camera& camera, std::vector<Texture>& textures);
-	void render(Shader& shader, Camera &camera);
+	void render(Shader& shader, Camera &camera, std::vector<Texture>& textures);
 
 };
 
@@ -28,9 +27,11 @@ bool chunkExists(const std::vector<Chunk>& chunks, const glm::vec2& pos)
 		}
 	}
 	return 0;
-
 }
 
+bool compareByMagnitude(const glm::vec2& a, const glm::vec2& b, const glm::vec2& pos) {
+	return glm::distance(a, pos) < glm::distance(b, pos);
+}
 
 void Terrain::update(Camera& camera, std::vector<Texture>& textures) {
 
@@ -50,28 +51,33 @@ void Terrain::update(Camera& camera, std::vector<Texture>& textures) {
 		}
 	}
 
+	// sort ChunkToLoad
+	glm::vec2 playerPosition = glm::vec2(camera.Position.x, camera.Position.z);
+	std::sort(ChunkToLoad.begin(), ChunkToLoad.end(), [&playerPosition](const glm::vec2& a, const glm::vec2& b) {return compareByMagnitude(a, b, playerPosition);});
+
+
 	if (!ChunkToLoad.size() == 0) {
+		double start = glfwGetTime();
 		Chunk chunk2(ChunkToLoad[0].x, ChunkToLoad[0].y/*z*/, chunksize);
 		chunk2.init(textures);
 		chunks.push_back(chunk2);
+		std::cout << glfwGetTime() - start << "\n";
 	}
 
 }
 
-void Terrain::render(Shader& shader, Camera& camera) {
+void Terrain::render(Shader& shader, Camera& camera, std::vector<Texture>& textures) {
 	for (auto &chunk : chunks) {
-		chunk.render(shader, camera);
+		chunk.render(shader, camera, textures);
 	}
 }
-
-
 
 int main()
 {
 	glfwInit();
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	int width = 1280;
 	int height = 720;
@@ -142,7 +148,7 @@ int main()
 		camera.updateMatrix(50.0f, 0.1f, 10000.0f);
 		camera.Matrix(shaderProgram, "camMatrix");
 		terrain.update(camera, textures);
-		terrain.render(shaderProgram, camera);
+		terrain.render(shaderProgram, camera, textures);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

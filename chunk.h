@@ -13,12 +13,13 @@ public:
 
 	Mesh mesh;
 	Mesh meshLod;
+	bool detready = false;
 
 	FastNoiseLite Noise;
 
 	Chunk(int x, int z, int size);
-	//Chunk();
 
 	void init(std::vector<Texture>& textures);
-	void render(Shader& shader, Camera& camera);
+	void detgen(std::vector<Texture>& textures);
+	void render(Shader& shader, Camera& camera, std::vector<Texture>& textures);
 };
