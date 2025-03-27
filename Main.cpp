@@ -6,17 +6,14 @@
 class Terrain {
 public:
 	int chunksize = 128;
-	int renderDistent = 20;
+	int renderDistent = 10;
 	std::vector<Chunk> chunks;
 
-	Terrain();
+	Terrain() = default;
 	void update(Camera& camera, std::vector<Texture>& textures);
 	void render(Shader& shader, Camera &camera, std::vector<Texture>& textures);
 
 };
-
-Terrain::Terrain() {
-}
 
 
 bool chunkExists(const std::vector<Chunk>& chunks, const glm::vec2& pos)
@@ -59,7 +56,7 @@ void Terrain::update(Camera& camera, std::vector<Texture>& textures) {
 	if (!ChunkToLoad.size() == 0) {
 		double start = glfwGetTime();
 		Chunk chunk2(ChunkToLoad[0].x, ChunkToLoad[0].y/*z*/, chunksize);
-		chunk2.init(textures);
+		chunk2.init(textures, camera.Position);
 		chunks.push_back(chunk2);
 		std::cout << glfwGetTime() - start << "\n";
 	}

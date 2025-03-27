@@ -12,14 +12,14 @@ public:
 	glm::vec3 position_vec3;
 
 	Mesh mesh;
-	Mesh meshLod;
-	bool detready = false;
+	int lodLevel;
 
 	FastNoiseLite Noise;
 
 	Chunk(int x, int z, int size);
 
-	void init(std::vector<Texture>& textures);
-	void detgen(std::vector<Texture>& textures);
+	void init(std::vector<Texture>& textures, glm::vec3 campos);
+	void detGen(std::vector<Texture>& textures, Mesh* tempmesh);
+	void lodGen(std::vector<Texture>& textures, int sizeM, Mesh* tempmesh);
 	void render(Shader& shader, Camera& camera, std::vector<Texture>& textures);
 };

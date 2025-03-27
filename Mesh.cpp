@@ -16,6 +16,8 @@ void Mesh::nymesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices,
 	VBO.Unbind();
 	EBO.Unbind();
 
+	VBO.Delete();
+	EBO.Delete();
 }
 
 void Mesh::clear() {
